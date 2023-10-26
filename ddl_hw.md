@@ -1,4 +1,4 @@
-```pyhton
+```sql
 
 
 --1) Создать таблицу employees
