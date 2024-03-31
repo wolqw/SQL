@@ -37,7 +37,6 @@ BEGIN TRANSACTION;
 COMMIT;
 ROLLBACK;
 
-
 CREATE VIEW student_info AS
 SELECT students.fname, students.surname, courses.course_name
 FROM students
@@ -45,13 +44,7 @@ INNER JOIN enrollments ON students.id = enrollments.student_id
 INNER JOIN courses ON enrollments.course_id = courses.id;
 
 
-CREATE TRIGGER log_update
-AFTER UPDATE ON students
-FOR EACH ROW
-EXECUTE PROCEDURE log_update_func();
-
 CREATE INDEX idx_students_fname ON students (fname);
-
 
 CREATE OR REPLACE FUNCTION add_student(fname VARCHAR, surname VARCHAR, age INT)
 RETURNS VOID AS
