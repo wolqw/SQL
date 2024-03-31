@@ -32,3 +32,32 @@ SELECT age, COUNT(*) FROM students GROUP BY age; -- Groups students by age
 
 SELECT * FROM students WHERE age IN (SELECT age FROM students WHERE fname LIKE 'A%'); -- Finds all students with the same age as students whose name starts with 'A'
 
+
+BEGIN TRANSACTION;
+COMMIT;
+ROLLBACK;
+
+
+CREATE VIEW student_info AS
+SELECT students.fname, students.surname, courses.course_name
+FROM students
+INNER JOIN enrollments ON students.id = enrollments.student_id
+INNER JOIN courses ON enrollments.course_id = courses.id;
+
+
+CREATE TRIGGER log_update
+AFTER UPDATE ON students
+FOR EACH ROW
+EXECUTE PROCEDURE log_update_func();
+
+CREATE INDEX idx_students_fname ON students (fname);
+
+
+CREATE OR REPLACE FUNCTION add_student(fname VARCHAR, surname VARCHAR, age INT)
+RETURNS VOID AS
+$$
+BEGIN
+INSERT INTO students (fname, surname, age)
+  VALUES (fname, surname, age);
+END;
+$$ LANGUAGE plpgsql;
